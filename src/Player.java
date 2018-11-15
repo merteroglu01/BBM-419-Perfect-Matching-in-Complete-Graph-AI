@@ -1,26 +1,14 @@
+import helper.Move;
+
 public class Player{
     //D - This is our class variable to hold the depth that the method will search to
     private int D = 10;
 
-    private class Move {
-        int source;
-        int target;
-
-        Move(int s, int t) {
-            source = s;
-            target = t;
-        }
-
-        public String toString() {
-            return "(" + source + "," + target + ")";
-        }
-    }
-
     //chooseMove - This method will utilize eval and minMax to decide what move
     // would be the best decision by the computer. It assesses different values for
     // every positibility of that the game could go to, and keep track of the best decision.
-    public Move chooseMove(Graph G) {
-        int max = -10000;
+    public Move chooseMove(Graph G, int color) {
+        int max = Integer.MIN_VALUE;
 
         Move best = new Move(0, 1);
         for(int mmm = 0; mmm < 5; mmm++){
@@ -34,13 +22,13 @@ public class Player{
         for(int i = 0; i < G.sizeOfGraph(); i++){
             for(int j = i+1; j < G.sizeOfGraph(); j++){
                 if(i != j && !G.isEdge(i, j)){
-                    System.out.println(i + j + " are I and J");
-                    G.addEdge(i, j, -1);
+                    //System.out.println("(" + i + "," + j +")" + " are I and J");
+                    G.addEdge(i, j, color);
                     Move m = new Move(i, j);
                     int val = minMax( G, 1, 0, 0);
                     //System.out.println(val + " | " + i +  " " + j);
                     if(val >= max) {
-                        System.out.println("New best");
+                        //System.out.println("New best");
                         best = m;
                         max = val;
                     }
@@ -48,7 +36,7 @@ public class Player{
                 }
             }
         }
-        System.out.println(best);
+        //System.out.println(best);
         return best;
     }
 
@@ -59,17 +47,13 @@ public class Player{
         for(int j = 0; j < G.sizeOfGraph(); j++){
             if(G.degree(j, 1) == 1)
                 i += 1;
-            if(G.degree(j, 1) > 1)
+            else if(G.degree(j, 1) > 1)
                 i += 6;
-            if(G.degree(j, -1) == 1)
+            else if(G.degree(j, -1) == 1)
                 i -= 1;
-            if(G.degree(j, -1) > 1)
+            else if(G.degree(j, -1) > 1)
                 i -= 4;
         }
-        if(G.isCycleOfLength(3, 1))
-            i = 1000000000;
-        if(G.isCycleOfLength(3, -1))
-            i = -1000000000;
         return i;
     }
 

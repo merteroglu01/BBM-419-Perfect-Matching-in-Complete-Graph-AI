@@ -11,9 +11,14 @@ public class Graph {
     private static ArrayList<Edge> edges = new ArrayList<>();
     private static Set<Edge[]> perfectMatches = new HashSet<>();
 
-    public Graph(int N){                            // a constructor for a instance of the class with N vertices
+    Graph(int N){                            // a constructor for a instance of the class with N vertices
         B = new int[N][N];
         visited = new boolean[B.length];
+        initializeEdges(N);
+        numCircles = N;
+    }
+
+    private void initializeEdges(int N){
         for(int vertex1 = 0; vertex1 < N; vertex1++){
             for(int vertex2 = vertex1 + 1; vertex2 < N; vertex2 ++){
                 edges.add(new Edge(vertex1,vertex2));
@@ -89,10 +94,10 @@ public class Graph {
         return counter;
     }
 
-    public int degree(int v, int w){                // return the number of edges of color w connected to vertex v
+    public int degree(int v, int makerOrBreaker){                // return the number of edges of maker or breaker connected to vertex v
         int counter = 0;
         for(int i = 0; i < B[v].length; ++i){
-            if(B[v][i] == w){
+            if(B[v][i] == makerOrBreaker){
                 counter++;
             }
         }
@@ -136,42 +141,12 @@ public class Graph {
         System.out.println();
     }
 
-    public boolean isCycleOfLength(int n, int w){  // return true iff there is a cycle of length n among edges of color w
-        for(int i = 0; i < B.length; i++){
-            visited[i] = true;
-            for(int j = 0; j < B.length; j++){
-                visited[j] = true;
-                if(getEdge(i, j) == w){
-                    if(isCycleHelper(j, i, n, w))
-                        return true;
-                }
-                visited[j] = false;
-            }
-            visited[i] = false;
-        }
-        return false;
-    }
 
-    private boolean isCycleHelper(int u, int v, int n, int w){
-        if(n == 2){
-            return getEdge(u, v) == w;
-        }else{
-            for(int i = 0; i < B.length; i++){
-                if(getEdge(u, i) == w && !visited[i]){
-                    visited[i] = true;
-                    boolean temp = isCycleHelper(i, v, --n, w);
-                    visited[i] = false;
-                    return temp;
-                }
-            }
-        }
-        return false;
-    }
 
-    private static boolean completeGraph(Graph G) {
+    public boolean completeGraph() {
         for(int r = 0; r < numCircles; ++r) {
             for(int c = 0; c < r; ++c) {
-                if(!G.isEdge(r,c))
+                if(!isEdge(r,c))
                     return false;
             }
         }
