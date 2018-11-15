@@ -1,3 +1,5 @@
+import helper.Edge;
+
 import java.util.*;
 
 public class Graph {
@@ -6,10 +8,57 @@ public class Graph {
     private static int[][] B;               // 0 = no edge; 1 = red edge; -1 = blue edge
     private static boolean [] visited;
     private static int numCircles = 6;
+    private static ArrayList<Edge> edges = new ArrayList<>();
+    private static Set<Edge[]> perfectMatches = new HashSet<>();
 
-    public Graph(int N){                            // a constructor for a instance of the class with N vertices 
+    public Graph(int N){                            // a constructor for a instance of the class with N vertices
         B = new int[N][N];
         visited = new boolean[B.length];
+        for(int vertex1 = 0; vertex1 < N; vertex1++){
+            for(int vertex2 = vertex1 + 1; vertex2 < N; vertex2 ++){
+                edges.add(new Edge(vertex1,vertex2));
+            }
+        }
+
+        for (Edge edge1 : edges) {
+            for(Edge edge2 : edges){
+                for(Edge edge3 : edges){
+                    if(!(edge1.checkEdgeHasSameSourceOrDestinationVertex(edge2) || edge2.checkEdgeHasSameSourceOrDestinationVertex(edge3)
+                            || edge1.checkEdgeHasSameSourceOrDestinationVertex(edge3))){
+                        Edge[] perfectMatch = new Edge[]{edge1,edge2,edge3};
+                        Arrays.sort(perfectMatch, new Comparator<Edge>() {
+                            @Override
+                            public int compare(Edge edge1, Edge edge2) {
+                                return Integer.compare(edge1.getSource(), edge2.getSource());
+                            }
+                        });
+                        boolean same = false;
+                        for(Edge[] perfectMatch2: perfectMatches){
+                            if(Arrays.equals(perfectMatch2,perfectMatch)){
+                                same = true;
+                            }
+                        }
+                        if(!same) perfectMatches.add(perfectMatch);
+                    }
+                }
+            }
+        }
+    }
+
+    public Set<Edge[]> getPerfectMatches() {
+        return perfectMatches;
+    }
+
+    public void setPerfectMatches(Set<Edge[]> perfectMatches) {
+        Graph.perfectMatches = perfectMatches;
+    }
+
+    public ArrayList<Edge> getEdges() {
+        return edges;
+    }
+
+    public void setEdges(ArrayList<Edge> edges) {
+        Graph.edges = edges;
     }
 
     public void addEdge(int u, int v, int w){       // add an edge from vertex u to v with value w (which in this hw will be  only 0, -1, or 1)
@@ -87,7 +136,7 @@ public class Graph {
         System.out.println();
     }
 
-    public boolean isCycleOfLength(int n, int w){  // return true iff there is a cycle of length n among edges of color w 
+    public boolean isCycleOfLength(int n, int w){  // return true iff there is a cycle of length n among edges of color w
         for(int i = 0; i < B.length; i++){
             visited[i] = true;
             for(int j = 0; j < B.length; j++){

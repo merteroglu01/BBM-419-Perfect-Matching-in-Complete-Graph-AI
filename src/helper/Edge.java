@@ -5,19 +5,37 @@ public class Edge {
     private int source;
     private int target;
 
-    Edge(int s, int t) {
+    public Edge(int s, int t) {
         source = s;
         target = t;
+    }
+
+    public int getSource() {
+        return source;
+    }
+
+    public void setSource(int source) {
+        this.source = source;
+    }
+
+    public int getTarget() {
+        return target;
+    }
+
+    public void setTarget(int target) {
+        this.target = target;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.source == ((Edge) obj).source && this.target == ((Edge) obj).target;
     }
 
     public String toString() {
         return "Edge = (" + source + "," + target + ")";
     }
 
-    public boolean equals(Edge edge) {
-        if(edge == this)
-            return true;
-        return (this.source != edge.source && this.target != edge.target && this.source != edge.target && this.target != edge.source);
-
+    public boolean checkEdgeHasSameSourceOrDestinationVertex(Edge edge) {
+        return (this.source == edge.source || this.target == edge.target || this.source == edge.target || this.target == edge.source);
     }
 }
