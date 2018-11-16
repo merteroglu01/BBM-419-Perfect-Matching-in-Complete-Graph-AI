@@ -1,6 +1,9 @@
 import helper.Edge;
 import helper.Move;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Player{
     //chooseMove - This method will utilize eval and minMax to decide what move
     // would be the best decision by the computer. It assesses different values for
@@ -8,7 +11,8 @@ public class Player{
     public Move chooseMove(Graph G, int player) {
         int max = Integer.MIN_VALUE;
         int min = Integer.MAX_VALUE;
-
+        Random random = new Random();
+        ArrayList<Move> bestMoves = new ArrayList<>();
         Move best = new Move(0, 1);
 
         for(int i = 0; i < G.sizeOfGraph(); i++){
@@ -21,14 +25,12 @@ public class Player{
                     //System.out.println(val + " | " + i +  " " + j + "player" + player);
                     if (player < 0) {
                         if (val >= max) {
-                            //System.out.println("New best");
-                            best = m;
+                            bestMoves.add(m);
                             max = val;
                         }
                     } else {
                         if (val <= min) {
-                            //System.out.println("New best");
-                            best = m;
+                            bestMoves.add(m);
                             min = val;
                         }
                     }
@@ -38,8 +40,7 @@ public class Player{
                 }
             }
         }
-        //System.out.println(best);
-        return best;
+        return bestMoves.get(random.nextInt(bestMoves.size()));
     }
 
     //eval - This method will assign values to each possibility within the tree and
@@ -47,9 +48,9 @@ public class Player{
     private int eval(Graph G, Edge edge, int player) {
         int source = edge.getSource();
         int targert = edge.getTarget();
-        int makerEdgeDegree = G.degree(source, -1) + G.degree(targert, -1);
+        int makerEdgeDegree = G.degree(source, -1) * G.degree(targert, -1);
         //System.out.println("Player = " + player + "makeredgedegree + " + makerEdgeDegree);
-        int breakerDegree = G.degree(source, 1) + G.degree(targert, 1);
+        int breakerDegree = G.degree(source, 1) * G.degree(targert, 1);
         //System.out.println("Player = " + player + "breakeredgedegree + " + breakerDegree);
         if (player < 0) return makerEdgeDegree * -1;
         return breakerDegree;
