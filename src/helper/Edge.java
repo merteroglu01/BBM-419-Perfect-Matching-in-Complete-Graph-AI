@@ -5,6 +5,9 @@ public class Edge {
     private int source;
     private int target;
 
+    public Edge() {
+
+    }
     public Edge(int s, int t) {
         source = s;
         target = t;

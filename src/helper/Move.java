@@ -1,6 +1,6 @@
 package helper;
 
-public class Move {
+public class Move extends Edge {
     private int source;
     private int target;
 

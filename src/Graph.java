@@ -84,6 +84,10 @@ public class Graph {
         return B[u][v] != 0;
     }
 
+    public boolean isMakersEdge(int u, int v) {
+        return B[u][v] == -1;
+    }
+
     public int degree(int v){                       // return the number of edges of either color connected to vertex v
         int counter = 0;
         for(int i = 0; i < B[v].length; ++i){
