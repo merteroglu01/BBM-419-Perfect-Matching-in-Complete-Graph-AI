@@ -7,21 +7,22 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
-        Graph G = new Graph(6);
+        Graph G;
         Player player = new Player();
         int color = -1;
         Random random = new Random();
+        int source, target, foundEdge, exit, totalMakersWins = 0, totalBreakersWins = 0;
+        Move move;
         for (int game = 0; game < 100; game++) {
             G = new Graph(6);
-            int source = random.nextInt(G.sizeOfGraph());
-            int target = random.nextInt(G.sizeOfGraph());
+            source = random.nextInt(G.sizeOfGraph());
+            target = random.nextInt(G.sizeOfGraph());
             if (source == target) {
                 if (source != 0) source -= 1;
                 else source += 1;
             }
             //System.out.println("Makers Move : (" + source + "," + target + ")");
             G.addEdge(source, target, color);
-            Move move = null;
             while (!G.completeGraph()) {
                 color = color * -1;
                 move = player.chooseMove(G, color);
@@ -31,8 +32,7 @@ public class Main {
             } else
                 System.out.println("Breakers Move : " + move.toString());*/
             }
-            int foundEdge = 0;
-            int exit = 1;
+            exit = 1;
             for (Edge[] perfectMatches : G.getPerfectMatches()) {
                 foundEdge = 0;
                 for (Edge edge : perfectMatches) {
@@ -41,10 +41,16 @@ public class Main {
                 if (foundEdge == 3) {
                     System.out.println("Perfect Match Found. Maker Wins with \n" + Arrays.toString(perfectMatches));
                     exit = 0;
+                    totalMakersWins++;
                     break;
                 }
             }
-            if (exit == 1) System.out.println("Breaker Wins");
+            if (exit == 1) {
+                System.out.println("Breaker Wins");
+                totalBreakersWins++;
+            }
         }
+
+        System.out.println("Makers Wins : " + totalMakersWins + " Breakers Wins : " + totalBreakersWins);
     }
 }
