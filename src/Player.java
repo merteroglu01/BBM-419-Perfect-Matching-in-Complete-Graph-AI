@@ -1,6 +1,8 @@
+import helper.Edge;
 import helper.Move;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Player{
@@ -41,7 +43,20 @@ public class Player{
         }
         return bestMoves.get(random.nextInt(bestMoves.size()));
     }
+    private int eval2(Graph G){
+        int maxMatching = 0;
+        int foundEdge;
+        for (Edge[] perfectMatches : G.getPerfectMatches()) {
+            foundEdge = 0;
+            for (Edge edge : perfectMatches) {
+                if (G.isMakersEdge(edge.getSource(), edge.getTarget())) foundEdge++;
+            }
+            if(foundEdge > maxMatching)
+                maxMatching = foundEdge;
+        }
+        return maxMatching;
 
+    }
     //eval - This method will assign values to each possibility within the tree and
     // dictate which move would be the best for the computer to make.
     private int eval(Graph G) {
@@ -64,7 +79,7 @@ public class Player{
     // pruning to make the tree traversing more efficient.
     private int minMax(Graph G, int depth, int alpha, int beta) {
         if (G.isFull() || depth == 10)
-            return eval(G); // stop searching and return eval
+            return eval2(G); // stop searching and return eval
         else if(depth%2 == 0) {
             int val = -100000000;
             for(int i = 0; i < G.sizeOfGraph(); i++){

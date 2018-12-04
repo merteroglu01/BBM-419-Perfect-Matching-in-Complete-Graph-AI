@@ -14,7 +14,7 @@ public class Main {
         int source, target, foundEdge, exit, totalMakersWins = 0, totalBreakersWins = 0;
         Move move;
         for (int game = 0; game < 100; game++) {
-            G = new Graph(4);
+            G = new Graph(6);
             source = random.nextInt(G.sizeOfGraph());
             target = random.nextInt(G.sizeOfGraph());
             if (source == target) {
