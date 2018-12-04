@@ -1,4 +1,3 @@
-import helper.Edge;
 import helper.Move;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class Player{
                     //System.out.println("(" + i + "," + j +")" + " are I and J");
                     G.addEdge(i, j, player);
                     Move m = new Move(i, j);
-                    int val = minMax(G, 1, 0, 0, m, player);
+                    int val = minMax(G, 1, 0, 0);
                     //System.out.println(val + " | " + i +  " " + j + "player" + player);
                     if (player < 0) {
                         if (val >= max) {
@@ -45,23 +44,27 @@ public class Player{
 
     //eval - This method will assign values to each possibility within the tree and
     // dictate which move would be the best for the computer to make.
-    private int eval(Graph G, Edge edge, int player) {
-        int source = edge.getSource();
-        int targert = edge.getTarget();
-        int makerEdgeDegree = G.degree(source, -1) * G.degree(targert, -1);
-        //System.out.println("Player = " + player + "makeredgedegree + " + makerEdgeDegree);
-        int breakerDegree = G.degree(source, 1) * G.degree(targert, 1);
-        //System.out.println("Player = " + player + "breakeredgedegree + " + breakerDegree);
-        if (player < 0) return makerEdgeDegree * -1;
-        return breakerDegree;
+    private int eval(Graph G) {
+        int i = 0;
+        for (int j = 0; j < G.sizeOfGraph(); j++) {
+            if (G.degree(j, 1) == 1)
+                i += 1;
+            if (G.degree(j, 1) > 1)
+                i += 6;
+            if (G.degree(j, -1) == 1)
+                i -= 1;
+            if (G.degree(j, -1) > 1)
+                i -= 4;
+        }
+        return i;
     }
 
     //minMax - This method will take in a couple of different parameters and construct
     // a tree with the different possibilities. This method will also preform alpha beta
     // pruning to make the tree traversing more efficient.
-    private int minMax(Graph G, int depth, int alpha, int beta, Edge edge, int player) {
-        if (G.isFull())
-            return eval(G, edge, player); // stop searching and return eval
+    private int minMax(Graph G, int depth, int alpha, int beta) {
+        if (G.isFull() || depth == 10)
+            return eval(G); // stop searching and return eval
         else if(depth%2 == 0) {
             int val = -100000000;
             for(int i = 0; i < G.sizeOfGraph(); i++){
@@ -70,7 +73,7 @@ public class Player{
                         alpha = Math.max(alpha, val); // update alpha with max so far
                         if(beta < alpha) break; // terminate loop
                         G.addEdge(i, j, -1);
-                        val = Math.max(val, minMax(G, depth + 1, alpha, beta, new Edge(i, j), player));
+                        val = Math.max(val, minMax(G, depth + 1, alpha, beta));
                         G.removeEdge(i, j);
                     }
                 }
@@ -84,7 +87,7 @@ public class Player{
                         beta = Math.min(beta, val); // update beta with min so far
                         if(beta < alpha) break; // terminate loop
                         G.addEdge(i, j, 1);
-                        val = Math.min(val, minMax(G, depth + 1, alpha, beta, new Edge(i, j), player));
+                        val = Math.min(val, minMax(G, depth + 1, alpha, beta));
                         G.removeEdge(i, j);
                     }
                 }
