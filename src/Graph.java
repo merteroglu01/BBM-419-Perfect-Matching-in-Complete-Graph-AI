@@ -20,8 +20,9 @@ public class Graph {
 
     private void initializeEdges(int N){
         for(int vertex1 = 0; vertex1 < N; vertex1++){
-            for(int vertex2 = vertex1 + 1; vertex2 < N; vertex2 ++){
-                edges.add(new Edge(vertex1,vertex2));
+            for (int vertex2 = 0; vertex2 < N; vertex2++) {
+                if (vertex1 != vertex2)
+                    edges.add(new Edge(vertex1, vertex2));
             }
         }
 

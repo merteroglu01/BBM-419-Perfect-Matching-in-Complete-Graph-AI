@@ -1,32 +1,35 @@
 import helper.Edge;
 import helper.Move;
+import helper.Players;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
         Graph G;
         Player player = new Player();
-        int color = -1;
-        Random random = new Random();
-        int source, target, foundEdge, exit, totalMakersWins = 0, totalBreakersWins = 0;
+        int color;
+        int foundEdge, exit, totalMakersWins = 0, totalBreakersWins = 0;
         Move move;
         for (int game = 0; game < 100; game++) {
             G = new Graph(6);
-            source = random.nextInt(G.sizeOfGraph());
-            target = random.nextInt(G.sizeOfGraph());
-            if (source == target) {
-                if (source != 0) source -= 1;
-                else source += 1;
-            }
-            //System.out.println("Makers Move : (" + source + "," + target + ")");
-            G.addEdge(source, target, color);
+            color = -1;
             while (!G.completeGraph()) {
-                color = color * -1;
-                move = player.chooseMove(G, color);
+                if (color == -1) {
+                    move = player.chooseMove(G, Players.COMP1);
+                    color = 1;
+                    //System.out.println("maker");
+                } else {
+                    move = player.chooseMove(G, Players.COMP2);
+                    color = -1;
+                    //System.out.println("breaker");
+                }
                 G.addEdge(move.getSource(), move.getTarget(), color);
+                G.addEdge(move.getTarget(), move.getSource(), color);
+                //System.out.println(move.toString());
+                //System.out.println("--------");
+
             /*if (color == -1) {
                 System.out.println("Makers Move : " + move.toString());
             } else
@@ -47,6 +50,7 @@ public class Main {
             }
             if (exit == 1) {
                 System.out.println("Breaker Wins");
+                G.printEdges();
                 totalBreakersWins++;
             }
         }
