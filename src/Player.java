@@ -18,14 +18,15 @@ public class Player{
         Random random = new Random();
         ArrayList<Move> bestMoves = new ArrayList<>();
         for(int i = 0; i < G.sizeOfGraph(); i++){
-            for (int j = 0; j < G.sizeOfGraph(); j++) {
+            for (int j = i + 1; j < G.sizeOfGraph(); j++) {
                 if(i != j && !G.isEdge(i, j)){
                     //System.out.println("(" + i + "," + j +")" + " are I and J");
                     if (player == Players.COMP1) G.addEdge(i, j, -1);
                     else G.addEdge(i, j, 1);
                     m = new Move(i, j);
                     int val = minMax(G, player, 0, MAX, MIN);
-                    //System.out.println(val + " | " + i +  " " + j + " " + player);
+                    //
+                    // System.out.println(val + " | " + i +  " " + j + " " + player);
 
                     if (player == Players.COMP1) {
                         if (val > MAX) {
@@ -33,7 +34,7 @@ public class Player{
                             //System.out.println("size of best moves : " + bestMoves.size());
                             bestMoves.clear();
                             //System.out.println("size of best moves : " + bestMoves.size());
-                            //bestMoves.add(m);
+                            bestMoves.add(m);
                             //System.out.println("size of best moves : " + bestMoves.size());
                             MAX = val;
                         } else if (val == MAX) {
@@ -42,7 +43,7 @@ public class Player{
                         }
                     } else {
                         if (val < MIN) {
-                            //System.out.println("new best min " + val + " " + MAX + " " + m);
+                            //System.out.println("new best min " + val + " " + MIN + " " + m);
                             bestMoves.clear();
                             bestMoves.add(m);
                             MIN = val;
@@ -102,12 +103,12 @@ public class Player{
     // pruning to make the tree traversing more efficient.
     private int minMax(Graph G, Players player, int depth, int alpha, int beta) {
 
-        if (G.isFull() || depth == 4)
+        if (G.isFull() || depth == 5)
             return eval2(G); // stop searching and return eval
         else if (player == Players.COMP1) {
             int val = Integer.MIN_VALUE;
             for(int i = 0; i < G.sizeOfGraph(); i++){
-                for (int j = 0; j < G.sizeOfGraph(); j++) {
+                for (int j = i + 1; j < G.sizeOfGraph(); j++) {
                     if(!G.isEdge(i, j)){
                         G.addEdge(i, j, -1);
                         val = Math.max(val, minMax(G, Players.COMP2, depth + 1, alpha, beta));
@@ -123,7 +124,7 @@ public class Player{
         } else { // is a min node
             int val = Integer.MAX_VALUE;
             for(int i = 0; i < G.sizeOfGraph(); i++){
-                for (int j = 0; j < G.sizeOfGraph(); j++) {
+                for (int j = i + 1; j < G.sizeOfGraph(); j++) {
                     if(!G.isEdge(i, j)){
                         G.addEdge(i, j, 1);
                         val = Math.min(val, minMax(G, Players.COMP1, depth + 1, alpha, beta));

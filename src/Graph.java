@@ -82,7 +82,7 @@ public class Graph {
     }
 
     public boolean isEdge(int u, int v){            // return true or false depending on whether there is an edge (of either color) from u to v
-        return B[u][v] != 0;
+        return B[u][v] == 1 || B[u][v] == -1;
     }
 
     public boolean isMakersEdge(int u, int v) {

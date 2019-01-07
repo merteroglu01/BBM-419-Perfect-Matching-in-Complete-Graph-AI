@@ -18,15 +18,16 @@ public class Main {
             while (!G.completeGraph()) {
                 if (color == -1) {
                     move = player.chooseMove(G, Players.COMP1);
+                    G.addEdge(move.getSource(), move.getTarget(), color);
                     color = 1;
-                    //System.out.println("maker");
+                    //System.out.println("maker");[Edge = (0,2), Edge = (3,5), Edge = (4,1)]
                 } else {
                     move = player.chooseMove(G, Players.COMP2);
+                    G.addEdge(move.getSource(), move.getTarget(), color);
                     color = -1;
                     //System.out.println("breaker");
                 }
-                G.addEdge(move.getSource(), move.getTarget(), color);
-                G.addEdge(move.getTarget(), move.getSource(), color);
+
                 //System.out.println(move.toString());
                 //System.out.println("--------");
 
@@ -43,6 +44,7 @@ public class Main {
                 }
                 if (foundEdge == 3) {
                     System.out.println("Perfect Match Found. Maker Wins with \n" + Arrays.toString(perfectMatches));
+                    //G.printEdges();
                     exit = 0;
                     totalMakersWins++;
                     break;
