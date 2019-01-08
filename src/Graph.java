@@ -6,20 +6,20 @@ public class Graph {
 
     //Class arrays for Graph
     private static int[][] B;               // 0 = no edge; 1 = red edge; -1 = blue edge
-    private static boolean [] visited;
+    private static boolean[] visited;
     private static int numCircles = 6;
     private static ArrayList<Edge> edges = new ArrayList<>();
     private static Set<Edge[]> perfectMatches = new HashSet<>();
 
-    Graph(int N){                            // a constructor for a instance of the class with N vertices
+    Graph(int N) {                            // a constructor for a instance of the class with N vertices
         B = new int[N][N];
         visited = new boolean[B.length];
         initializeEdges(N);
         numCircles = N;
     }
 
-    private void initializeEdges(int N){
-        for(int vertex1 = 0; vertex1 < N; vertex1++){
+    private void initializeEdges(int N) {
+        for (int vertex1 = 0; vertex1 < N; vertex1++) {
             for (int vertex2 = 0; vertex2 < N; vertex2++) {
                 if (vertex1 != vertex2)
                     edges.add(new Edge(vertex1, vertex2));
@@ -27,11 +27,11 @@ public class Graph {
         }
 
         for (Edge edge1 : edges) {
-            for(Edge edge2 : edges){
-                for(Edge edge3 : edges){
-                    if(!(edge1.checkEdgeHasSameSourceOrDestinationVertex(edge2) || edge2.checkEdgeHasSameSourceOrDestinationVertex(edge3)
-                            || edge1.checkEdgeHasSameSourceOrDestinationVertex(edge3))){
-                        Edge[] perfectMatch = new Edge[]{edge1,edge2,edge3};
+            for (Edge edge2 : edges) {
+                for (Edge edge3 : edges) {
+                    if (!(edge1.checkEdgeHasSameSourceOrDestinationVertex(edge2) || edge2.checkEdgeHasSameSourceOrDestinationVertex(edge3)
+                            || edge1.checkEdgeHasSameSourceOrDestinationVertex(edge3))) {
+                        Edge[] perfectMatch = new Edge[]{edge1, edge2, edge3};
                         Arrays.sort(perfectMatch, new Comparator<Edge>() {
                             @Override
                             public int compare(Edge edge1, Edge edge2) {
@@ -39,12 +39,12 @@ public class Graph {
                             }
                         });
                         boolean same = false;
-                        for(Edge[] perfectMatch2: perfectMatches){
-                            if(Arrays.equals(perfectMatch2,perfectMatch)){
+                        for (Edge[] perfectMatch2 : perfectMatches) {
+                            if (Arrays.equals(perfectMatch2, perfectMatch)) {
                                 same = true;
                             }
                         }
-                        if(!same) perfectMatches.add(perfectMatch);
+                        if (!same) perfectMatches.add(perfectMatch);
                     }
                 }
             }
@@ -67,21 +67,21 @@ public class Graph {
         Graph.edges = edges;
     }
 
-    public void addEdge(int u, int v, int w){       // add an edge from vertex u to v with value w (which in this hw will be  only 0, -1, or 1)
+    public void addEdge(int u, int v, int w) {       // add an edge from vertex u to v with value w (which in this hw will be  only 0, -1, or 1)
         B[u][v] = w;
         B[v][u] = w;
     }
 
-    public void removeEdge(int u, int v){         // remove the edge from u to v and the (duplicate) edge from v to u
+    public void removeEdge(int u, int v) {         // remove the edge from u to v and the (duplicate) edge from v to u
         B[u][v] = 0;
         B[v][u] = 0;
     }
 
-    public int getEdge(int u, int v){               // return the value (-1, 0, or 1) of the edge that goes from u to v
+    public int getEdge(int u, int v) {               // return the value (-1, 0, or 1) of the edge that goes from u to v
         return B[u][v];
     }
 
-    public boolean isEdge(int u, int v){            // return true or false depending on whether there is an edge (of either color) from u to v
+    public boolean isEdge(int u, int v) {            // return true or false depending on whether there is an edge (of either color) from u to v
         return B[u][v] == 1 || B[u][v] == -1;
     }
 
@@ -89,56 +89,68 @@ public class Graph {
         return B[u][v] == -1;
     }
 
-    public int degree(int v){                       // return the number of edges of either color connected to vertex v
+    public int degree(int v) {                       // return the number of edges of either color connected to vertex v
         int counter = 0;
-        for(int i = 0; i < B[v].length; ++i){
-            if(B[v][i] != 0){
+        for (int i = 0; i < B[v].length; ++i) {
+            if (B[v][i] != 0) {
                 counter++;
             }
         }
         return counter;
     }
 
-    public int degree(int v, int makerOrBreaker){                // return the number of edges of maker or breaker connected to vertex v
+    public int howmanyEdge() {                       // return the number of edges of either color connected to vertex v
         int counter = 0;
-        for(int i = 0; i < B[v].length; ++i){
-            if(B[v][i] == makerOrBreaker){
+        for (int i = 0; i < this.sizeOfGraph(); i++) {
+            for (int j = i + 1; j < this.sizeOfGraph(); j++) {
+                if (i != j && this.isEdge(i, j)) {
+                    counter++;
+                }
+            }
+        }
+        return counter;
+    }
+
+    public int degree(int v, int makerOrBreaker) {                // return the number of edges of maker or breaker connected to vertex v
+        int counter = 0;
+        for (int i = 0; i < B[v].length; ++i) {
+            if (B[v][i] == makerOrBreaker) {
                 counter++;
             }
         }
         return counter;
     }
 
-    public int sizeOfGraph(){
+    public int sizeOfGraph() {
         return B.length;
     }
 
-    public boolean isFull(){
-        for(int i = 0; i < B.length; i++){
-            if(degree(i) < B.length - 1)
+    public boolean isFull() {
+        for (int i = 0; i < B.length; i++) {
+            if (degree(i) < B.length - 1)
                 return false;
         }
         return true;
     }
 
-    public void printEdges(){                       // print out the edge matrix, as shown above; this is only for debugging
+    public void printEdges() {                       // print out the edge matrix, as shown above; this is only for debugging
         System.out.print("     ");
-        for(int i = 1; i < B.length +1; ++i){
-            System.out.print(i+"   ");
+        for (int i = 1; i < B.length + 1; ++i) {
+            System.out.print(i + "   ");
         }
         System.out.println();
         System.out.print("     ");
-        for(int i = 0; i < B.length; ++i){
+        for (int i = 0; i < B.length; ++i) {
             System.out.print("-   ");
         }
         System.out.println();
-        for(int i = 0; i < B.length; ++i){
-            System.out.print((i+1)+" |  ");
-            for(int n = 0; n < B.length; ++n){
-                if(n<5 && B[i][n+1] == -1){
-                    System.out.print(B[i][n]+"  ");
-                }else{
-                    System.out.print(B[i][n]+"   ");
+        for (int i = 0; i < B.length; ++i) {
+            System.out.print((i + 1) + " |  ");
+            for (int n = 0; n < B.length; ++n) {
+                if (n < 5 && B[i][n + 1] == -1) {
+                    System.out.print(B[i][n] + "  ");
+                } else {
+                    System.out.print(B[i][n] + "   ");
                 }
             }
             System.out.println();
@@ -147,17 +159,32 @@ public class Graph {
     }
 
 
-
     public boolean completeGraph() {
-        for(int r = 0; r < numCircles; ++r) {
-            for(int c = 0; c < r; ++c) {
-                if(!isEdge(r,c))
+        for (int r = 0; r < numCircles; ++r) {
+            for (int c = 0; c < r; ++c) {
+                if (!isEdge(r, c))
                     return false;
             }
         }
         return true;
 
+    }
 
+    public boolean gameisOver() {
+        int maxMatching = 0;
+        int foundEdge;
+        for (Edge[] perfectMatches : this.getPerfectMatches()) {
+            foundEdge = 0;
+            for (Edge edge : perfectMatches) {
 
+                if (this.isMakersEdge(edge.getSource(), edge.getTarget())) foundEdge++;
+            }
+            if (foundEdge > maxMatching)
+                maxMatching = foundEdge;
+        }
+        //G.printEdges();
+        //System.out.println(maxMatching);
+        //System.out.println("---------");
+        return maxMatching == 3;
     }
 }

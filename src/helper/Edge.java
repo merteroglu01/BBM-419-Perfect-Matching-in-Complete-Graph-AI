@@ -8,6 +8,7 @@ public class Edge {
     public Edge() {
 
     }
+
     public Edge(int s, int t) {
         source = s;
         target = t;
