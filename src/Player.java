@@ -81,7 +81,9 @@ public class Player {
 
                 if (G.isMakersEdge(edge.getSource(), edge.getTarget())) foundEdge++;
             }
-            if (foundEdge == 3) return (24 - moveCount) * 1000;
+            if (moveCount < 6 && foundEdge == 3)
+                G.printEdges();
+            if (foundEdge == 3) return (14 - moveCount) * 1000;
         }
         //G.printEdges();
         //System.out.println(maxMatching);
@@ -112,7 +114,7 @@ public class Player {
     // pruning to make the tree traversing more efficient.
     private int minMax(Graph G, Players player, int depth, int alpha, int beta, int moveCount) {
         int count = G.howmanyEdge();
-        if (G.gameisOver() || depth == 10 || G.isFull())
+        if (G.gameisOver() || depth == 5 || G.isFull())
             return eval2(G, moveCount + depth); // stop searching and return eval
         if (player.equals(Players.COMP1)) {
             int val = Integer.MIN_VALUE;
