@@ -35,25 +35,25 @@ public class Player {
 
                     if (player == Players.COMP1) {
                         if (val > MAX) {
-                            System.out.println("new best max " + val + " " + MAX + " " + m + " : " + moveCount);
-                            System.out.println("size of best moves : " + bestMoves.size());
+                            //System.out.println("new best max " + val + " " + MAX + " " + m + " : " + moveCount);
+                            //System.out.println("size of best moves : " + bestMoves.size());
                             bestMoves.clear();
-                            System.out.println("size of best moves : " + bestMoves.size());
+                            //System.out.println("size of best moves : " + bestMoves.size());
                             bestMoves.add(m);
-                            System.out.println("size of best moves : " + bestMoves.size());
+                            //System.out.println("size of best moves : " + bestMoves.size());
                             MAX = val;
                         } else if (val == MAX) {
-                            System.out.println("best max" + m + " : " + moveCount);
+                            //System.out.println("best max" + m + " : " + moveCount);
                             bestMoves.add(m);
                         }
                     } else {
                         if (val < MIN) {
-                            System.out.println("new best min " + val + " " + MIN + " " + m + " : " + moveCount);
+                            //System.out.println("new best min " + val + " " + MIN + " " + m + " : " + moveCount);
                             bestMoves.clear();
                             bestMoves.add(m);
                             MIN = val;
                         } else if (val == MIN) {
-                            System.out.println("best min" + m + " : " + moveCount);
+                            //System.out.println("best min" + m + " : " + moveCount);
                             bestMoves.add(m);
                         }
                     }
@@ -63,12 +63,12 @@ public class Player {
                 }
             }
         }
-        if (bestMoves.size() == 0) {
-            System.out.println("olalal : " + player + " " + m);
+        /*if (bestMoves.size() == 0) {
+            //System.out.println("olalal : " + player + " " + m);
             return m;
-        }
+        }*/
         Move best = bestMoves.get(random.nextInt(bestMoves.size()));
-        System.out.println("best return : " + best + " " + player);
+        //System.out.println("best return : " + best + " " + player);
         return best;
     }
 
@@ -81,14 +81,12 @@ public class Player {
 
                 if (G.isMakersEdge(edge.getSource(), edge.getTarget())) foundEdge++;
             }
-            if (moveCount < 6 && foundEdge == 3)
-                G.printEdges();
             if (foundEdge == 3) return (14 - moveCount) * 1000;
         }
         //G.printEdges();
         //System.out.println(maxMatching);
         //System.out.println("---------");
-        return -1000;
+        return (14 - moveCount) * -1000;
 
     }
 
@@ -114,7 +112,7 @@ public class Player {
     // pruning to make the tree traversing more efficient.
     private int minMax(Graph G, Players player, int depth, int alpha, int beta, int moveCount) {
         int count = G.howmanyEdge();
-        if (G.gameisOver() || depth == 5 || G.isFull())
+        if (depth == 0 || G.gameisOver() || G.isFull())
             return eval2(G, moveCount + depth); // stop searching and return eval
         if (player.equals(Players.COMP1)) {
             int val = Integer.MIN_VALUE;
