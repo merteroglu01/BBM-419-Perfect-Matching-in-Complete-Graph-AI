@@ -7,8 +7,8 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class Main {
-    private static final int numCircles = 6;
-    private static Graph G = new Graph(numCircles);
+    private static final int numCircles = 4;
+    private static Graph Gx = new Graph(numCircles);
     private static JFrame frame;
     private static Color bg;
     private static JCanvas canvas;
@@ -77,7 +77,7 @@ public class Main {
 
         for (int r = 0; r < numCircles; ++r) {
             for (int c = 0; c < r; ++c) {
-                int e = G.getEdge(r, c);
+                int e = Gx.getEdge(r, c);
                 if (e != 0) {
                     if (e == 1)
                         canvas.setPaint(Color.RED);
@@ -103,7 +103,7 @@ public class Main {
         int color, moveCount;
         int foundEdge, exit, totalMakersWins = 0, totalBreakersWins = 0;
         Move move;
-        for (int game = 0; game < 1; game++) {
+        for (int game = 0; game < 20; game++) {
             moveCount = 1;
             G = new Graph(6);
             color = -1;
@@ -130,13 +130,6 @@ public class Main {
                     break;
                 }
                 moveCount++;
-                //System.out.println(move.toString());
-                //System.out.println("--------");
-
-            /*if (color == -1) {
-                System.out.println("Makers Move : " + move.toString());
-            } else
-                System.out.println("Breakers Move : " + move.toString());*/
             }
             exit = 1;
             for (Edge[] perfectMatches : G.getPerfectMatches()) {
@@ -145,7 +138,7 @@ public class Main {
                     if (G.isMakersEdge(edge.getSource(), edge.getTarget())) foundEdge++;
                 }
                 if (foundEdge == 3) {
-                    System.out.println("Perfect Match Found. Maker Wins with \n" + Arrays.toString(perfectMatches) + " : " + totalBreakersWins);
+                    System.out.println("Perfect Match Found. Maker Wins with \n" + Arrays.toString(perfectMatches));
                     //G.printEdges();
                     exit = 0;
                     totalMakersWins++;

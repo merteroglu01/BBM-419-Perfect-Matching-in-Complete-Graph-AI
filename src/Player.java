@@ -73,7 +73,6 @@ public class Player {
     }
 
     private int eval2(Graph G, int moveCount) {
-        int maxMatching = 0;
         int foundEdge;
         for (Edge[] perfectMatches : G.getPerfectMatches()) {
             foundEdge = 0;
@@ -93,26 +92,18 @@ public class Player {
     //eval - This method will assign values to each possibility within the tree and
     // dictate which move would be the best for the computer to make.
     private int eval(Graph G) {
-        int i = 0;
+        int max = 0;
         for (int j = 0; j < G.sizeOfGraph(); j++) {
-            if (G.degree(j, 1) == 1)
-                i += 1;
-            if (G.degree(j, 1) > 1)
-                i += 6;
-            if (G.degree(j, -1) == 1)
-                i -= 1;
-            if (G.degree(j, -1) > 1)
-                i -= 4;
+            max = Math.max(max, G.degree(j, -1));
         }
-        return i;
+        return -max;
     }
 
     //minMax - This method will take in a couple of different parameters and construct
     // a tree with the different possibilities. This method will also preform alpha beta
     // pruning to make the tree traversing more efficient.
     private int minMax(Graph G, Players player, int depth, int alpha, int beta, int moveCount) {
-        int count = G.howmanyEdge();
-        if (depth == 0 || G.gameisOver() || G.isFull())
+        if (depth == 5 || G.gameisOver() || G.isFull())
             return eval2(G, moveCount + depth); // stop searching and return eval
         if (player.equals(Players.COMP1)) {
             int val = Integer.MIN_VALUE;

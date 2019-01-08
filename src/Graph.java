@@ -25,13 +25,35 @@ public class Graph {
                     edges.add(new Edge(vertex1, vertex2));
             }
         }
-
-        for (Edge edge1 : edges) {
-            for (Edge edge2 : edges) {
-                for (Edge edge3 : edges) {
-                    if (!(edge1.checkEdgeHasSameSourceOrDestinationVertex(edge2) || edge2.checkEdgeHasSameSourceOrDestinationVertex(edge3)
-                            || edge1.checkEdgeHasSameSourceOrDestinationVertex(edge3))) {
-                        Edge[] perfectMatch = new Edge[]{edge1, edge2, edge3};
+        if (N == 6) {
+            for (Edge edge1 : edges) {
+                for (Edge edge2 : edges) {
+                    for (Edge edge3 : edges) {
+                        if (!(edge1.checkEdgeHasSameSourceOrDestinationVertex(edge2) || edge2.checkEdgeHasSameSourceOrDestinationVertex(edge3)
+                                || edge1.checkEdgeHasSameSourceOrDestinationVertex(edge3))) {
+                            Edge[] perfectMatch = new Edge[]{edge1, edge2, edge3};
+                            Arrays.sort(perfectMatch, new Comparator<Edge>() {
+                                @Override
+                                public int compare(Edge edge1, Edge edge2) {
+                                    return Integer.compare(edge1.getSource(), edge2.getSource());
+                                }
+                            });
+                            boolean same = false;
+                            for (Edge[] perfectMatch2 : perfectMatches) {
+                                if (Arrays.equals(perfectMatch2, perfectMatch)) {
+                                    same = true;
+                                }
+                            }
+                            if (!same) perfectMatches.add(perfectMatch);
+                        }
+                    }
+                }
+            }
+        } else if (N == 4) {
+            for (Edge edge1 : edges) {
+                for (Edge edge2 : edges) {
+                    if (!(edge1.checkEdgeHasSameSourceOrDestinationVertex(edge2))) {
+                        Edge[] perfectMatch = new Edge[]{edge1, edge2};
                         Arrays.sort(perfectMatch, new Comparator<Edge>() {
                             @Override
                             public int compare(Edge edge1, Edge edge2) {
