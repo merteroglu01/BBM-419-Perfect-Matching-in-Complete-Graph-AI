@@ -112,7 +112,7 @@ public class Player {
     // pruning to make the tree traversing more efficient.
     private int minMax(Graph G, Players player, int depth, int alpha, int beta, int moveCount) {
         int count = G.howmanyEdge();
-        if (depth == 0 || G.gameisOver() || G.isFull())
+        if (depth == 5 || G.gameisOver() || G.isFull())
             return eval2(G, moveCount + depth); // stop searching and return eval
         if (player.equals(Players.COMP1)) {
             int val = Integer.MIN_VALUE;
